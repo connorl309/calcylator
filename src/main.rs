@@ -1,16 +1,15 @@
 pub mod token;
 use std::io::stdin;
 fn main() {
-    println!("Enter string");
+    println!("Enter expression to evaluate:");
     let mut line = String::new();
     stdin().read_line(&mut line).unwrap();
     line.retain(|c| !c.is_whitespace()); // remove all whitespaces
     line = line.replace(&['(', ')'][..], ""); // remove parentheses beccause something something RPN works
-    let spl: Vec<&str> = line.split_inclusive(&['+', '-', '*', '/', '^'][..]).collect();
+    let spl: Vec<&str> = line.split_inclusive(&['+', '-', '*', '/', '^', '(', ')'][..]).collect();
     // Need to rewrite parser
     let token_list: Vec<token::Token> = parse_list(&spl);
 
-    
     // Debug
     for i in &token_list {
         print!("'{}'", i.content);
@@ -20,7 +19,7 @@ fn main() {
     // Verify all tokens are valid
     for i in &token_list {
         if i.get_type() == token::TokType::Invalid {
-            panic!("Token '{}' is invalid for the calculator.", i.content);
+            panic!("Error: invalid token '{}' found.", i.content);
         }
     }
 
@@ -62,7 +61,9 @@ fn main() {
             }
         }
     }
-
+    if operator_list.len() != 0 {
+        panic!("Error! Extra operators found. Please correct the entered expression.");
+    }
     println!("Calculated value is: {}", number_list.pop().unwrap());
     
     // https://en.wikipedia.org/wiki/Shunting_yard_algorithm

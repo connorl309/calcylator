@@ -7,7 +7,7 @@ pub struct Token {
 pub enum TokType {
     Number,
     Operation,
-    Invalid
+    Invalid,
 }
 impl Token {
 
