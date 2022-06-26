@@ -38,8 +38,9 @@ impl Token {
     }
 }
 
+// checks if the resulting list's splitted strings have operators in them
 pub fn has_op(to_check: &str) -> bool {
-    if (to_check.len() == 0 || to_check.len() == 1) {
+    if to_check.len() == 0 || to_check.len() == 1 {
         return false;
     }
     let last_char = to_check.chars().last().unwrap();
