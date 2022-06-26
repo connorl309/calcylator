@@ -3,10 +3,10 @@ pub struct Token {
     pub content: String,
 }
 #[derive(Debug)]
+#[derive(PartialEq)]
 pub enum TokType {
     Number,
     Operation,
-    Container,
     Invalid
 }
 impl Token {
@@ -21,8 +21,6 @@ impl Token {
                 "-" => TokType::Operation,
                 "/" => TokType::Operation,
                 "^" => TokType::Operation,
-                "(" => TokType::Container,
-                ")" => TokType::Container,
                 _ => TokType::Invalid,
             }
         };
