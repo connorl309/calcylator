@@ -6,14 +6,16 @@ fn main() {
     stdin().read_line(&mut line).unwrap();
     line.retain(|c| !c.is_whitespace()); // remove all whitespaces
     line = line.replace(&['(', ')'][..], ""); // remove parentheses beccause something something RPN works
-    let mut spl: Vec<&str> = line.split_inclusive(&['+', '-', '*', '/', '^'][..]).collect();
-    adjust_list(&mut spl);
-    let token_list: Vec<token::Token> = transform_list(spl);
+    let spl: Vec<&str> = line.split_inclusive(&['+', '-', '*', '/', '^'][..]).collect();
+    // Need to rewrite parser
+    let token_list: Vec<token::Token> = parse_list(&spl);
 
+    
     // Debug
     for i in &token_list {
         print!("'{}'", i.content);
     }
+    println!();
 
     // Verify all tokens are valid
     for i in &token_list {
@@ -35,24 +37,25 @@ fn main() {
         }
         
         // There is a valid math thingy we can do !
-        if number_list.len() >= 2 && operator_list.len() > 0 {
+        if number_list.len() > 1 && operator_list.len() > 0 {
             let op = operator_list.pop().unwrap().content.as_str();
             let n1 = number_list.pop().unwrap();
             let n2 = number_list.pop().unwrap();
+            //println!("{} {} {}", n1, op, n2);
             match op {
                 "+" => {
-                    number_list.push(n1 + n2);
+                    number_list.push(n1 + n2); // order doesnt matter
                 },
                 "-" => {
-                    number_list.push(n1 - n2);
+                    number_list.push(n2 - n1);
                 },
                 "/" => {
-                    number_list.push(n1 / n2);
+                    number_list.push(n2 / n1);
                 },
                 "*" => {
-                    number_list.push(n1 * n2);
+                    number_list.push(n1 * n2); // order doesnt matter
                 },
-                "^" => { // this needs to be backwards. weird
+                "^" => {
                     number_list.push(n2.powf(n1));
                 },
                 _ => panic!("Matched operator '{}' is invalid!", op),
@@ -61,34 +64,36 @@ fn main() {
     }
 
     println!("Calculated value is: {}", number_list.pop().unwrap());
-
+    
     // https://en.wikipedia.org/wiki/Shunting_yard_algorithm
 }
 
-// Parses and arranges equation appropriately
-fn adjust_list(list: &Vec<&str>) -> Vec<String> {
-    let mut ret: Vec<String> = Vec::new();
-    for i in 0..list.len() {
-        if token::has_op(list[i]) {
-            // temp is the operator we'll put into the list
-            let mut temp_op: String;
-            let temp_num: String;
-            
-            
+// Parses list properly
+fn parse_list(list: &Vec<&str>) -> Vec<token::Token> {
+    let mut fixed_list: Vec<String> = Vec::new();
+
+    for &i in list {
+        if token::has_op(i) {
+            // We know that last character is the operator
+            let mut num = i.chars();
+            let op = num.next_back().unwrap().to_string();
+            fixed_list.push(num.as_str().to_string());
+            fixed_list.push(op);
         } else {
-            ret.push(String::from(list[i]));
+            fixed_list.push(i.to_string());
         }
     }
-    return ret;
+
+    return transform_list(fixed_list);
 }
 
 // Transforms a &str vector into a token::Token vector
 // god this is so scuffed
-fn transform_list(list: Vec<&str>) -> Vec<token::Token> {
+fn transform_list(list: Vec<String>) -> Vec<token::Token> {
     let mut r = Vec::new();
 
     for i in list {
-        r.push(token::Token { content: String::from(i) });
+        r.push(token::Token { content: i.to_string() });
     }
 
     r

@@ -42,7 +42,7 @@ pub fn has_op(to_check: &str) -> bool {
         return false;
     }
     let last_char = to_check.chars().last().unwrap();
-    if last_char == '+' || last_char == '-' || last_char == '*' || last_char == '(' || last_char == ')' || last_char == '/' || last_char == '^' {
+    if last_char == '+' || last_char == '-' || last_char == '*' || last_char == '/' || last_char == '^' {
         return true;
     }
     return false;
