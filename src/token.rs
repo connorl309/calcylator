@@ -4,5 +4,4 @@ pub enum Token {
     Number(f32),
     LParen,
     RParen,
-    White,
 }

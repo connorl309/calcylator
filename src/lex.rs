@@ -23,6 +23,7 @@ impl Lexer {
             panic!("Cannot lex (or solve!) an empty expression.");
         }
         let expression: &str = input.clone(); // copy string
+        expression.chars().filter(|c| !c.is_whitespace()); // remove whitespace
         // Loop index
         let mut i = 0;
 
@@ -41,7 +42,6 @@ impl Lexer {
                     '+' => self.content.push(Token::Operation(ch, 3)),
                     '-' => self.content.push(Token::Operation(ch, 3)),
                     '^' => self.content.push(Token::Operation(ch, 8)),
-                    ' ' => self.content.push(Token::White),
                     _ => panic!("Bad operator {}\n", ch),
                 }
             } else if ch == '.' || ch.is_numeric() { // is a number?
