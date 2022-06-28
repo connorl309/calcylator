@@ -1,9 +1,9 @@
-use std::io::stdin;
+pub mod lex;
+pub mod token;
+pub mod solver;
+
 fn main() {
-    println!("Enter expression to evaluate:");
-    let mut line = String::new();
-    stdin().read_line(&mut line).unwrap();
-    line.retain(|c| !c.is_whitespace()); // remove all whitespaces
-    
-    // https://en.wikipedia.org/wiki/Shunting_yard_algorithm
+    let mut test = lex::Lexer::new();
+    test.populate("5*5");
+    // test.debug_dump();
 }
