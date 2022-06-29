@@ -3,8 +3,8 @@ pub mod token;
 pub mod solver;
 
 fn main() {
-    let mut test = lex::Lexer::new();
-    test.populate("3^(2+2)");
-    let mut solver = solver::Solver::new(test);
+    let mut solver = solver::Solver::new_expr("-12491.3");
+    solver.as_reverse_polish();
+    solver.debug_dump();
     // test.debug_dump();
 }
