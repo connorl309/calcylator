@@ -37,11 +37,11 @@ impl Lexer {
                 match ch {
                     '(' => { self.content.push(Token::LParen); lpar += 1; },
                     ')' => { self.content.push(Token::RParen); rpar += 1; },
-                    '*' => self.content.push(Token::Operation(ch, 5)),
-                    '/' => self.content.push(Token::Operation(ch, 5)),
-                    '+' => self.content.push(Token::Operation(ch, 3)),
-                    '-' => self.content.push(Token::Operation(ch, 3)),
-                    '^' => self.content.push(Token::Operation(ch, 8)),
+                    '*' => self.content.push(Token::Operation(ch, 9, true)),
+                    '/' => self.content.push(Token::Operation(ch, 8, true)),
+                    '+' => self.content.push(Token::Operation(ch, 5, true)),
+                    '-' => self.content.push(Token::Operation(ch, 4, true)),
+                    '^' => self.content.push(Token::Operation(ch, 10, false)),
                     _ => panic!("Bad operator {}\n", ch),
                 }
             } else if ch == '.' || ch.is_numeric() { // is a number?
